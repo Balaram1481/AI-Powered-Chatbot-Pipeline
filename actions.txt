@@ -1,0 +1,46 @@
+name: AI SecOps Pipeline
+
+on: [push]
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.10
+
+    - name: Install Dependencies
+      run: |
+        pip install -r requirements.txt
+
+    # 🔍 SAST + Dependency Scan
+    - name: Run Security Scan
+      run: python security_scan.py
+
+    # 🚀 Start App
+    - name: Start Application
+      run: |
+        nohup python app.py &
+        sleep 10
+
+    # 🌐 DAST
+    - name: Run DAST Scan
+      run: python dast_check.py
+
+    # 🤖 AI Decision
+    - name: AI Analysis
+      run: python ai_analysis.py
+      continue-on-error: true
+
+    # 📧 Send Email
+    - name: Send Email Report
+      run: python send_email.py
+      env:
+        EMAIL_USER: ${{ secrets.EMAIL_USER }}
+        EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
