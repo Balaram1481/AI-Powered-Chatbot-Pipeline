@@ -17,7 +17,7 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        pip install -r requirements.txt
+        pip install -r requirments.txt
 
     # 🔍 SAST + Dependency Scan
     - name: Run Security Scan
