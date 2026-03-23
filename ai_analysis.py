@@ -1,30 +1,44 @@
+def get_suggestion(issue):
+    if "API key" in issue:
+        return "Use environment variables instead of hardcoding secrets", "High risk of credential exposure"
+
+    elif "Debug mode" in issue:
+        return "Disable debug mode in production", "Can expose internal application data"
+
+    elif "Flask" in issue:
+        return "Upgrade to latest secure version", "Known vulnerabilities may be exploited"
+
+    elif "CSP" in issue:
+        return "Add Content-Security-Policy headers", "Helps prevent XSS attacks"
+
+    else:
+        return "Follow secure coding practices", "General security risk"
+
+
 def analyze():
     block = False
-    report = "🔐 AI SecOps Final Report\n\n"
+    report = "AI SecOps Final Report\n\n"
 
-    with open("scan_results.txt", "r") as f:
+    with open("scan_results.txt", "r", encoding="utf-8", errors="ignore") as f:
         issues = f.readlines()
 
     for issue in issues:
         issue = issue.strip()
-        report += issue + "\n"
+        suggestion, impact = get_suggestion(issue)
+
+        report += f"{issue}\n"
+        report += f"Suggestion: {suggestion}\n"
+        report += f"Impact: {impact}\n\n"
 
         if "[HIGH]" in issue:
             block = True
-            report += "➡ Action: Immediate fix required\n\n"
-
-        elif "[MEDIUM]" in issue:
-            report += "➡ Action: Fix soon\n\n"
-
-        else:
-            report += "➡ Action: Low priority\n\n"
 
     if block:
-        report += "❌ FINAL DECISION: BLOCK DEPLOYMENT\n"
+        report += "FINAL DECISION: BLOCK DEPLOYMENT\n"
     else:
-        report += "✅ FINAL DECISION: ALLOW DEPLOYMENT\n"
+        report += "FINAL DECISION: ALLOW DEPLOYMENT\n"
 
-    with open("security_report.txt", "w") as f:
+    with open("security_report.txt", "w", encoding="utf-8") as f:
         f.write(report)
 
     print(report)
