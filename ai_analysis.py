@@ -1,3 +1,8 @@
+import os
+BASE_DIR=os.path.dirname(os.path.abspath(__file__))
+RESULT_FILE=os.path.join(BASE_DIR,"scan_results.txt")
+REPORT_FILE=os.path.join(BASE_DIR,"scan_report.txt")
+
 def get_suggestion(issue):
     if "API key" in issue:
         return "Use environment variables instead of hardcoding secrets", "High risk of credential exposure"
@@ -19,7 +24,7 @@ def analyze():
     block = False
     report = "AI SecOps Final Report\n\n"
 
-    with open("scan_results.txt", "r", encoding="utf-8", errors="ignore") as f:
+    with open(RESULT_FILE, "r", encoding="utf-8", errors="ignore") as f:
         issues = f.readlines()
 
     for issue in issues:
@@ -38,7 +43,7 @@ def analyze():
     else:
         report += "FINAL DECISION: ALLOW DEPLOYMENT\n"
 
-    with open("security_report.txt", "w", encoding="utf-8") as f:
+    with open(REPORT_FILE, "w", encoding="utf-8") as f:
         f.write(report)
 
     print(report)
