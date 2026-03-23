@@ -21,7 +21,7 @@ jobs:
 
     # 🔍 SAST + Dependency Scan
     - name: Run Security Scan
-      run: python security_scan.py
+      run: python security_check.py
 
     # 🚀 Start App
     - name: Start Application
